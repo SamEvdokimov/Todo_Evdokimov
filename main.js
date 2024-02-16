@@ -7,7 +7,7 @@ const renderToDo = () => {
   let listItems = '';
   toDoList.forEach((todo) => {
     if (todo.text !== '') {
-      listItems += `<li> <input type="checkbox"${todo.isChecked ? 'checked' : ''}/><span>${todo.text}</span> <button>Удалить</button> </li>`;
+      listItems += `<li id="todo-list-item" data-id=${todo.id}> <input type="checkbox"${todo.isChecked ? 'checked' : ''}/><span>${todo.text}</span> <button>Удалить</button> </li>`;
     }
   });
   list.innerHTML = listItems;
@@ -25,7 +25,7 @@ const addNewTodo = (event) => {
   event.preventDefault();
 };
 const handleClick = ((event) => {
-  console.log(event);
+  if (event.target.type === 'button') console.log('button');
 }
 );
 
