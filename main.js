@@ -1,6 +1,9 @@
 const sendButton = document.querySelector('#send-button');
 const input = document.querySelector('#input');
-const toDos = [];
+const list = document.querySelector('#list-for-render');
+
+console.log(list.innerHTML);
+const toDoList = [];
 
 const addNewTodo = (event) => {
   const toDo = {
@@ -8,12 +11,16 @@ const addNewTodo = (event) => {
     text: input.value,
     isChecked: false,
   };
-  toDos.push(toDo);
+  toDoList.push(toDo);
 
-  toDos.forEach(function(task) {
+  toDoList.forEach((task) => {
     console.log(task);
   });
 
   event.preventDefault();
 };
 sendButton.addEventListener('click', addNewTodo);
+
+/*
+document.addEventListener('click', (e) => console.log(e));
+*/
