@@ -1,10 +1,11 @@
 /* eslint-disable no-param-reassign */
 const sendButton = document.querySelector('#send-button');
-const deleteButton = document.querySelector('#delete-button');
-const input = document.querySelector('#input');
-const list = document.querySelector('#list-for-render');
+const deleteButton = document.querySelector('#delete-button-all');
+const inputNewTodo = document.querySelector('#input-todo-text');
+const listToDos = document.querySelector('#list-for-render');
 const checkTodos = document.querySelector('#check-all');
 const KEYDOWN_ENTER = 'Enter';
+const DOUBLE_CLICK = 2;
 let toDoList = [];
 
 const renderToDo = () => {
@@ -14,22 +15,23 @@ const renderToDo = () => {
       listItems
       += `<li id="todo-list-item" data-id=${todo.id}> 
       <input type="checkbox"${todo.isChecked ? 'checked' : ''}/>
-      <span>${todo.text}</span> 
+      <input hidden value="${todo.text}"/>
+      <span>${todo.text}</span>
       <button>Удалить</button> 
       </li>`;
     }
   });
-  list.innerHTML = listItems;
+  listToDos.innerHTML = listItems;
 };
 
 const addNewTodo = (event) => {
   const toDo = {
     id: Date.now(),
-    text: input.value,
+    text: inputNewTodo.value,
     isChecked: false,
   };
   toDoList.push(toDo);
-  input.value = '';
+  inputNewTodo.value = '';
   renderToDo();
   event.preventDefault();
 };
@@ -46,6 +48,9 @@ const handleClick = ((event) => {
         todo.isChecked = event.target.checked;
       }
     });
+  }
+  if (event.target.tagName === 'SPAN' && event.detail === DOUBLE_CLICK) {
+    event.target.previousElementSibling.hidden = false;
   }
 });
 const checkAll = (event) => {
@@ -64,8 +69,9 @@ const keyDown = (event) => {
     addNewTodo(event);
   }
 };
-input.addEventListener('keydown', keyDown);
+
+inputNewTodo.addEventListener('keydown', keyDown);
 deleteButton.addEventListener('click', deleteChecked);
 checkTodos.addEventListener('click', checkAll);
-list.addEventListener('click', handleClick);
+listToDos.addEventListener('click', handleClick);
 sendButton.addEventListener('click', addNewTodo);
