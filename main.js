@@ -15,7 +15,7 @@ const renderToDo = () => {
       listItems
       += `<li id="todo-list-item" data-id=${todo.id}> 
       <input type="checkbox"${todo.isChecked ? 'checked' : ''}/>
-      <input hidden value="${todo.text}"/>
+      <input class = "edit-input" hidden value="${todo.text}"/>
       <span>${todo.text}</span>
       <button>Удалить</button> 
       </li>`;
@@ -44,8 +44,10 @@ const saveDefaultTextOfTask = (event) => {
   });
 };
 const editTaskByBlur = (event) => {
-  saveDefaultTextOfTask(event);
-  renderToDo();
+  if (event.target.className === 'edit-input') {
+    saveDefaultTextOfTask(event);
+    renderToDo();
+  }
 };
 
 const editTaskByKeyDown = (event) => {
