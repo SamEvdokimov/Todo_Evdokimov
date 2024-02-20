@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 const sendButton = document.querySelector('#send-button');
 const deleteButton = document.querySelector('#delete-button-all');
 const inputNewTodo = document.querySelector('#input-todo-text');
@@ -37,13 +36,21 @@ const addNewTodo = (event) => {
   event.preventDefault();
 };
 const saveDefaultTextOfTask = (event) => {
+  const id = parseInt(event.target.parentElement.dataset.id, 10);
+  toDoList.forEach((todo) => {
+    if (todo.id === id) {
+      todo.text = event.target.value;
+    }
+  });
+};
+const editTaskByBlur = (event) => {
+  saveDefaultTextOfTask(event);
+  renderToDo();
+};
+
+const editTaskByKeyDown = (event) => {
   if (event.key === KEYDOWN_ENTER) {
-    const id = parseInt(event.target.parentElement.dataset.id, 10);
-    toDoList.forEach((todo) => {
-      if (todo.id === id) {
-        todo.text = event.target.value;
-      }
-    });
+    saveDefaultTextOfTask(event);
     renderToDo();
   }
   if (event.key === KEYDOWN_ESC) {
@@ -76,7 +83,6 @@ const handleClick = ((event) => {
     previousSibling.hidden = false;
     event.target.hidden = true;
     previousSibling.focus();
-    console.log(event);
   }
 });
 const checkAll = (event) => {
@@ -94,6 +100,6 @@ inputNewTodo.addEventListener('keydown', keyDownAddNewTodo);
 deleteButton.addEventListener('click', deleteChecked);
 checkTodos.addEventListener('click', checkAll);
 listToDos.addEventListener('click', handleClick);
-listToDos.addEventListener('keydown', saveDefaultTextOfTask);
-listToDos.addEventListener('blur', saveDefaultTextOfTask);
+listToDos.addEventListener('keydown', editTaskByKeyDown);
+listToDos.addEventListener('blur', editTaskByBlur, true);
 sendButton.addEventListener('click', addNewTodo);
