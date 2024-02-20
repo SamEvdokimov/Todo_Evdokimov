@@ -3,11 +3,16 @@ const deleteButton = document.querySelector('#delete-button-all');
 const inputNewTodo = document.querySelector('#input-todo-text');
 const listToDos = document.querySelector('#list-for-render');
 const checkTodos = document.querySelector('#check-all');
+const groupButtons = document.querySelector('.group-buttons');
 const KEYDOWN_ENTER = 'Enter';
 const KEYDOWN_ESC = 'Escape';
 const DOUBLE_CLICK = 2;
 let toDoList = [];
 
+const checkAllHandler = () => {
+  checkTodos.checked = toDoList.length > 0 && toDoList.every((todo) => todo.isChecked);
+};
+/* const  */
 const renderToDo = () => {
   let listItems = '';
   toDoList.forEach((todo) => {
@@ -21,6 +26,7 @@ const renderToDo = () => {
       </li>`;
     }
   });
+  checkAllHandler();
   listToDos.innerHTML = listItems;
 };
 
@@ -35,8 +41,9 @@ const addNewTodo = (event) => {
   renderToDo();
   event.preventDefault();
 };
+
 const saveDefaultTextOfTask = (event) => {
-  const id = parseInt(event.target.parentElement.dataset.id, 10);
+  const id = Number(event.target.parentElement.dataset.id);
   toDoList.forEach((todo) => {
     if (todo.id === id) {
       todo.text = event.target.value;
@@ -68,17 +75,18 @@ const keyDownAddNewTodo = (event) => {
 
 const handleClick = ((event) => {
   if (event.target.type === 'submit') {
-    const idToDelete = parseInt(event.target.parentNode.dataset.id, 10);
+    const idToDelete = Number(event.target.parentNode.dataset.id);
     toDoList = toDoList.filter((todo) => todo.id !== idToDelete);
     renderToDo();
   }
   if (event.target.type === 'checkbox') {
-    const idToCheck = parseInt(event.target.parentNode.dataset.id, 10);
+    const idToCheck = Number(event.target.parentNode.dataset.id);
     toDoList.forEach((todo) => {
       if (todo.id === idToCheck) {
         todo.isChecked = event.target.checked;
       }
     });
+    renderToDo();
   }
   if (event.target.tagName === 'SPAN' && event.detail === DOUBLE_CLICK) {
     const previousSibling = event.target.previousElementSibling;
