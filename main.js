@@ -6,40 +6,71 @@ const checkTodos = document.querySelector('#check-all');
 const groupButtons = document.querySelector('.group-buttons');
 const KEYDOWN_ENTER = 'Enter';
 const KEYDOWN_ESC = 'Escape';
+let filterType = 'all-tasks';
 const DOUBLE_CLICK = 2;
 let toDoList = [];
 
 const checkAllHandler = () => {
   checkTodos.checked = toDoList.length > 0 && toDoList.every((todo) => todo.isChecked);
 };
-/* const  */
+
+const renderTaskCount = () => {
+  const all = toDoList.length;
+  const active = toDoList.filter((todo) => !todo.isChecked).length;
+  const completed = toDoList.filter((todo) => todo.isChecked).length;
+  const list = [all, active, completed];
+  return list;
+};
+const renderTasksButton = () => {
+  const all = renderTaskCount();
+  groupButtons.children[0].innerText = `All (${all[0]})`;
+  groupButtons.children[1].innerText = `Active (${all[1]})`;
+  groupButtons.children[2].innerText = `Completed (${all[2]})`;
+};
+const tabButtonList = (event) => {
+  let filterTodo = [];
+  if (event.target.id === 'all-active-tasks') {
+    filterTodo = toDoList.filter((todo) => !todo.isChecked);
+    filterType = event.target.id;
+    return filterTodo;
+  }
+  if (event.target.id === 'all-completed-tasks') {
+    filterTodo = toDoList.filter((todo) => todo.isChecked);
+    filterType = event.target.id;
+    return filterTodo;
+  }
+  return toDoList;
+};
 const renderToDo = () => {
+/*   const a = tabButtonList();
+  console.log(a); */
   let listItems = '';
   toDoList.forEach((todo) => {
-    if (todo.text !== '') {
-      listItems
+    listItems
       += `<li id="todo-list-item" data-id=${todo.id}> 
       <input type="checkbox"${todo.isChecked ? 'checked' : ''}/>
       <input class = "edit-input" hidden value="${todo.text}"/>
       <span>${todo.text}</span>
       <button>Удалить</button> 
       </li>`;
-    }
   });
+  renderTasksButton();
   checkAllHandler();
   listToDos.innerHTML = listItems;
 };
 
 const addNewTodo = (event) => {
-  const toDo = {
-    id: Date.now(),
-    text: inputNewTodo.value,
-    isChecked: false,
-  };
-  toDoList.push(toDo);
-  inputNewTodo.value = '';
-  renderToDo();
-  event.preventDefault();
+  if (inputNewTodo.value !== '') {
+    const toDo = {
+      id: Date.now(),
+      text: inputNewTodo.value,
+      isChecked: false,
+    };
+    toDoList.push(toDo);
+    inputNewTodo.value = '';
+    renderToDo();
+    event.preventDefault();
+  }
 };
 
 const saveDefaultTextOfTask = (event) => {
@@ -107,9 +138,10 @@ const deleteChecked = () => {
 };
 
 inputNewTodo.addEventListener('keydown', keyDownAddNewTodo);
-deleteButton.addEventListener('click', deleteChecked);
 checkTodos.addEventListener('click', checkAll);
 listToDos.addEventListener('click', handleClick);
 listToDos.addEventListener('keydown', editTaskByKeyDown);
 listToDos.addEventListener('blur', editTaskByBlur, true);
+groupButtons.addEventListener('click', tabButtonList);
 sendButton.addEventListener('click', addNewTodo);
+deleteButton.addEventListener('click', deleteChecked);
