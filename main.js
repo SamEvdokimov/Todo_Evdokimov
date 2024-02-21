@@ -27,25 +27,22 @@ const renderTasksButton = () => {
   groupButtons.children[1].innerText = `Active (${all[1]})`;
   groupButtons.children[2].innerText = `Completed (${all[2]})`;
 };
-const tabButtonList = (event) => {
+const tabButtonList = () => {
   let filterTodo = [];
-  if (event.target.id === 'all-active-tasks') {
+  if (filterType === 'all-active-tasks') {
     filterTodo = toDoList.filter((todo) => !todo.isChecked);
-    filterType = event.target.id;
     return filterTodo;
   }
-  if (event.target.id === 'all-completed-tasks') {
+  if (filterType === 'all-completed-tasks') {
     filterTodo = toDoList.filter((todo) => todo.isChecked);
-    filterType = event.target.id;
     return filterTodo;
   }
   return toDoList;
 };
 const renderToDo = () => {
-/*   const a = tabButtonList();
-  console.log(a); */
+  const a = tabButtonList();
   let listItems = '';
-  toDoList.forEach((todo) => {
+  a.forEach((todo) => {
     listItems
       += `<li id="todo-list-item" data-id=${todo.id}> 
       <input type="checkbox"${todo.isChecked ? 'checked' : ''}/>
@@ -57,6 +54,11 @@ const renderToDo = () => {
   renderTasksButton();
   checkAllHandler();
   listToDos.innerHTML = listItems;
+};
+
+const showCounterType = (event) => {
+  filterType = event.target.id;
+  renderToDo();
 };
 
 const addNewTodo = (event) => {
@@ -76,7 +78,7 @@ const addNewTodo = (event) => {
 const saveDefaultTextOfTask = (event) => {
   const id = Number(event.target.parentElement.dataset.id);
   toDoList.forEach((todo) => {
-    if (todo.id === id) {
+    if (todo.id === id && todo.t) {
       todo.text = event.target.value;
     }
   });
@@ -142,6 +144,6 @@ checkTodos.addEventListener('click', checkAll);
 listToDos.addEventListener('click', handleClick);
 listToDos.addEventListener('keydown', editTaskByKeyDown);
 listToDos.addEventListener('blur', editTaskByBlur, true);
-groupButtons.addEventListener('click', tabButtonList);
+groupButtons.addEventListener('click', showCounterType);
 sendButton.addEventListener('click', addNewTodo);
 deleteButton.addEventListener('click', deleteChecked);
