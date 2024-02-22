@@ -78,7 +78,7 @@ const addNewTodo = (event) => {
 const saveDefaultTextOfTask = (event) => {
   const id = Number(event.target.parentElement.dataset.id);
   toDoList.forEach((todo) => {
-    if (todo.id === id && todo.t) {
+    if (todo.id === id /* && todo.text.length !== 0 */) {
       todo.text = event.target.value;
     }
   });
