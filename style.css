@@ -1,4 +1,14 @@
-/* .bg-pink {
-    background-color: pink;
-  }
-   */
+.group button{
+  width: 200px;
+}
+
+/* .input-group{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+} */
+
+/* .input-group{
+  display: flex;
+} */

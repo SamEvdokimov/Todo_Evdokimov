@@ -7,6 +7,8 @@ const groupButtons = document.querySelector('.group-buttons');
 const KEYDOWN_ENTER = 'Enter';
 const KEYDOWN_ESC = 'Escape';
 let filterType = 'all-tasks';
+let currentPage = 1;
+const tasksOnPage = 5;
 const DOUBLE_CLICK = 2;
 let toDoList = [];
 
@@ -78,13 +80,13 @@ const addNewTodo = (event) => {
 const saveDefaultTextOfTask = (event) => {
   const id = Number(event.target.parentElement.dataset.id);
   toDoList.forEach((todo) => {
-    if (todo.id === id /* && todo.text.length !== 0 */) {
+    if (todo.id === id && event.target.value) {
       todo.text = event.target.value;
     }
   });
 };
 const editTaskByBlur = (event) => {
-  if (event.target.className === 'edit-input') {
+  if (event.sourceCapabilities) {
     saveDefaultTextOfTask(event);
     renderToDo();
   }
