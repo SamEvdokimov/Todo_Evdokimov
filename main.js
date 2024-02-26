@@ -7,11 +7,32 @@ const groupButtons = document.querySelector('.group-buttons');
 const KEYDOWN_ENTER = 'Enter';
 const KEYDOWN_ESC = 'Escape';
 let filterType = 'all-tasks';
-let currentPage = 1;
+const currentPage = 1;
 const tasksOnPage = 5;
 const DOUBLE_CLICK = 2;
 let toDoList = [];
 
+const sliceTodo = (array) => {
+  const sliceArray = [];
+
+  array.slice().forEach((element, index) => {
+    if (index % tasksOnPage === 0) {
+      sliceArray.push(array.slice(index, index + tasksOnPage));
+    }
+  });
+
+  const lastSlice = array.slice(-(array.length % tasksOnPage) || array.length);
+  if (lastSlice.length > 0) {
+    sliceArray.push(lastSlice);
+  }
+
+  return sliceArray;
+};
+
+const pagesCounter = () => {
+  const pagesCount = Math.ceil(toDoList / 5);
+  return pagesCount;
+};
 const checkAllHandler = () => {
   checkTodos.checked = toDoList.length > 0 && toDoList.every((todo) => todo.isChecked);
 };
@@ -47,17 +68,18 @@ const renderToDo = () => {
   a.forEach((todo) => {
     listItems
       += `<li id="todo-list-item" data-id=${todo.id}> 
+      <div id="todo-text">
       <input type="checkbox"${todo.isChecked ? 'checked' : ''}/>
       <input class = "edit-input" hidden value="${todo.text}"/>
       <span>${todo.text}</span>
-      <button>Удалить</button> 
+      </div>
+      <button>X</button> 
       </li>`;
   });
   renderTasksButton();
   checkAllHandler();
   listToDos.innerHTML = listItems;
 };
-
 const showCounterType = (event) => {
   filterType = event.target.id;
   renderToDo();
@@ -78,7 +100,7 @@ const addNewTodo = (event) => {
 };
 
 const saveDefaultTextOfTask = (event) => {
-  const id = Number(event.target.parentElement.dataset.id);
+  const id = Number(event.target.parentElement.previousSibling.parentNode.dataset.id);
   toDoList.forEach((todo) => {
     if (todo.id === id && event.target.value) {
       todo.text = event.target.value;
@@ -125,8 +147,10 @@ const handleClick = ((event) => {
   }
   if (event.target.tagName === 'SPAN' && event.detail === DOUBLE_CLICK) {
     const previousSibling = event.target.previousElementSibling;
+    console.log(previousSibling);
     previousSibling.hidden = false;
     event.target.hidden = true;
+    console.log(event.target);
     previousSibling.focus();
   }
 });

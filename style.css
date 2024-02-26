@@ -1,14 +1,64 @@
-.group button{
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: pink;
+}
+
+#todo-list-item {
+  width: 250px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgb(200, 233, 255);
+  border-radius: 20px;
+  margin: 10px 0;
+}
+
+#todo-text {
+  display: flex;
+  justify-content: start;
+  width: 100px;
+}
+
+#todo-text span {
+  display: block;
+  width: 100px;
+}
+
+.input-area {
+  display: flex;
+}
+
+.input-area button {
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+  border: none;
+}
+
+.input-area input {
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+  border: none;
+}
+
+#delete-button-all {
+  margin-top: 20px;
+}
+
+
+.group button {
   width: 200px;
 }
 
-/* .input-group{
+.input-group {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: start;
-} */
+}
 
-/* .input-group{
+.input-group {
   display: flex;
-} */
+}
