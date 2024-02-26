@@ -27,6 +27,7 @@ body {
   width: 100px;
 }
 
+
 .input-area {
   display: flex;
 }
@@ -47,16 +48,29 @@ body {
   margin-top: 20px;
 }
 
+.active {
+  background-color: lightblue;
+}
 
-.group button {
-  width: 200px;
+.group-buttons {
+  display: flex;
+}
+
+.group-buttons button {
+  width: 140px;
+  height: 30px;
+  flex: 1;
+  padding: 1px 1px; 
+  margin: 1px;  
+  text-align: center;
+  align-items: flex-start; 
 }
 
 .input-group {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .input-group {

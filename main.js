@@ -4,34 +4,32 @@ const inputNewTodo = document.querySelector('#input-todo-text');
 const listToDos = document.querySelector('#list-for-render');
 const checkTodos = document.querySelector('#check-all');
 const groupButtons = document.querySelector('.group-buttons');
+const paginationPages = document.querySelector('.render-pagination');
+
 const KEYDOWN_ENTER = 'Enter';
 const KEYDOWN_ESC = 'Escape';
-let filterType = 'all-tasks';
-const currentPage = 1;
-const tasksOnPage = 5;
+const TASKS_ON_PAGE = 5;
 const DOUBLE_CLICK = 2;
+
+let currentPage = 1;
+let filterType = 'all-tasks';
 let toDoList = [];
 
 const sliceTodo = (array) => {
-  const sliceArray = [];
-
-  array.slice().forEach((element, index) => {
-    if (index % tasksOnPage === 0) {
-      sliceArray.push(array.slice(index, index + tasksOnPage));
-    }
-  });
-
-  const lastSlice = array.slice(-(array.length % tasksOnPage) || array.length);
-  if (lastSlice.length > 0 && lastSlice < tasksOnPage) {
-    sliceArray.push(lastSlice);
-  }
-
-  return sliceArray;
+  const end = currentPage * TASKS_ON_PAGE;
+  const start = end - TASKS_ON_PAGE;
+  return array.slice(start, end);
 };
 
-const pagesCounter = (b) => {
-  const pagesCount = Math.ceil(b.length / 5);
-  return pagesCount;
+const pagesCounter = (array) => {
+  let paginationButtons = '';
+  const pagesCount = Math.ceil(array.length / TASKS_ON_PAGE);
+  for (let i = 1; i <= pagesCount; i += 1) {
+    paginationButtons
+    += `<button ${i === currentPage ? 'class = "active"' : ''}>${i}</button>`;
+    console.log(currentPage, i);
+  }
+  paginationPages.innerHTML = paginationButtons;
 };
 const checkAllHandler = () => {
   checkTodos.checked = toDoList.length > 0 && toDoList.every((todo) => todo.isChecked);
@@ -62,10 +60,25 @@ const tabButtonList = () => {
   }
   return toDoList;
 };
+const showActiveTab = () => {
+  groupButtons.children[0].classList.remove('active');
+  groupButtons.children[1].classList.remove('active');
+  groupButtons.children[2].classList.remove('active');
+  if (filterType === 'all-tasks') {
+    groupButtons.children[0].classList.add('active');
+  }
+  if (filterType === 'all-active-tasks') {
+    groupButtons.children[1].classList.add('active');
+  }
+  if (filterType === 'all-completed-tasks') {
+    groupButtons.children[2].classList.add('active');
+  }
+};
 const renderToDo = () => {
   const tabTodo = tabButtonList();
   let listItems = '';
-  tabTodo.forEach((todo) => {
+  const currentTodo = sliceTodo(tabTodo);
+  currentTodo.forEach((todo) => {
     listItems
       += `<li id="todo-list-item" data-id=${todo.id}> 
       <div id="todo-text">
@@ -76,28 +89,37 @@ const renderToDo = () => {
       <button>X</button> 
       </li>`;
   });
+  pagesCounter(tabTodo);
   renderTasksButton();
   checkAllHandler();
+  showActiveTab();
   listToDos.innerHTML = listItems;
-  const b = sliceTodo(tabTodo);
-  console.log(b);
-  // const a = pagesCounter(tabTodo);
-  // console.log(a);
 };
+
 const showCounterType = (event) => {
   filterType = event.target.id;
   renderToDo();
 };
 
+const clickPaginationButton = (event) => {
+  currentPage = event.target.innerText;
+  console.log(event.target);
+  event.target.classList.add('active');
+  renderToDo();
+};
 const addNewTodo = (event) => {
-  if (inputNewTodo.value !== '') {
+  const todoText = inputNewTodo.value.trim();
+  const sanitizedTodoText = todoText.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g, ' ').replace(/[^\w\s]/gi, '');
+  if (sanitizedTodoText !== '') {
     const toDo = {
       id: Date.now(),
-      text: inputNewTodo.value,
+      text: sanitizedTodoText,
       isChecked: false,
     };
     toDoList.push(toDo);
     inputNewTodo.value = '';
+    filterType = 'all-tasks';
+    currentPage = Math.ceil(toDoList.length / TASKS_ON_PAGE);
     renderToDo();
     event.preventDefault();
   }
@@ -156,6 +178,7 @@ const handleClick = ((event) => {
     previousSibling.focus();
   }
 });
+
 const checkAll = (event) => {
   toDoList.forEach((todo) => {
     todo.isChecked = event.target.checked;
@@ -164,6 +187,7 @@ const checkAll = (event) => {
 };
 const deleteChecked = () => {
   toDoList = toDoList.filter((todo) => !todo.isChecked);
+  filterType = 'all-tasks';
   renderToDo();
 };
 
@@ -175,3 +199,4 @@ listToDos.addEventListener('blur', editTaskByBlur, true);
 groupButtons.addEventListener('click', showCounterType);
 sendButton.addEventListener('click', addNewTodo);
 deleteButton.addEventListener('click', deleteChecked);
+paginationPages.addEventListener('click', clickPaginationButton);
