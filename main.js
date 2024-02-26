@@ -22,15 +22,15 @@ const sliceTodo = (array) => {
   });
 
   const lastSlice = array.slice(-(array.length % tasksOnPage) || array.length);
-  if (lastSlice.length > 0) {
+  if (lastSlice.length > 0 && lastSlice < tasksOnPage) {
     sliceArray.push(lastSlice);
   }
 
   return sliceArray;
 };
 
-const pagesCounter = () => {
-  const pagesCount = Math.ceil(toDoList / 5);
+const pagesCounter = (b) => {
+  const pagesCount = Math.ceil(b.length / 5);
   return pagesCount;
 };
 const checkAllHandler = () => {
@@ -63,9 +63,9 @@ const tabButtonList = () => {
   return toDoList;
 };
 const renderToDo = () => {
-  const a = tabButtonList();
+  const tabTodo = tabButtonList();
   let listItems = '';
-  a.forEach((todo) => {
+  tabTodo.forEach((todo) => {
     listItems
       += `<li id="todo-list-item" data-id=${todo.id}> 
       <div id="todo-text">
@@ -79,6 +79,10 @@ const renderToDo = () => {
   renderTasksButton();
   checkAllHandler();
   listToDos.innerHTML = listItems;
+  const b = sliceTodo(tabTodo);
+  console.log(b);
+  // const a = pagesCounter(tabTodo);
+  // console.log(a);
 };
 const showCounterType = (event) => {
   filterType = event.target.id;
@@ -137,7 +141,7 @@ const handleClick = ((event) => {
     renderToDo();
   }
   if (event.target.type === 'checkbox') {
-    const idToCheck = Number(event.target.parentNode.dataset.id);
+    const idToCheck = Number(event.target.parentElement.previousSibling.parentNode.dataset.id);
     toDoList.forEach((todo) => {
       if (todo.id === idToCheck) {
         todo.isChecked = event.target.checked;
@@ -147,10 +151,8 @@ const handleClick = ((event) => {
   }
   if (event.target.tagName === 'SPAN' && event.detail === DOUBLE_CLICK) {
     const previousSibling = event.target.previousElementSibling;
-    console.log(previousSibling);
     previousSibling.hidden = false;
     event.target.hidden = true;
-    console.log(event.target);
     previousSibling.focus();
   }
 });

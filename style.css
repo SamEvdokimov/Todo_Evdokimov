@@ -23,7 +23,7 @@ body {
 }
 
 #todo-text span {
-  display: block;
+  /* display: block; */
   width: 100px;
 }
 
