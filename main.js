@@ -27,10 +27,10 @@ const pagesCounter = (array) => {
   for (let i = 1; i <= pagesCount; i += 1) {
     paginationButtons
     += `<button ${i === currentPage ? 'class = "active"' : ''}>${i}</button>`;
-    console.log(currentPage, i);
   }
   paginationPages.innerHTML = paginationButtons;
 };
+
 const checkAllHandler = () => {
   checkTodos.checked = toDoList.length > 0 && toDoList.every((todo) => todo.isChecked);
 };
@@ -102,8 +102,7 @@ const showCounterType = (event) => {
 };
 
 const clickPaginationButton = (event) => {
-  currentPage = event.target.innerText;
-  console.log(event.target);
+  currentPage = Number(event.target.innerText);
   event.target.classList.add('active');
   renderToDo();
 };
@@ -129,6 +128,8 @@ const saveDefaultTextOfTask = (event) => {
   const id = Number(event.target.parentElement.previousSibling.parentNode.dataset.id);
   toDoList.forEach((todo) => {
     if (todo.id === id && event.target.value) {
+      event.target.value = event.target.value.trim();
+      event.target.value = event.target.value.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g, ' ').replace(/[^\w\s]/gi, '');
       todo.text = event.target.value;
     }
   });
@@ -158,11 +159,17 @@ const keyDownAddNewTodo = (event) => {
 
 const handleClick = ((event) => {
   if (event.target.type === 'submit') {
+    if (currentPage > pagesCounter) {
+      currentPage = pagesCounter;
+    }
     const idToDelete = Number(event.target.parentNode.dataset.id);
     toDoList = toDoList.filter((todo) => todo.id !== idToDelete);
     renderToDo();
   }
   if (event.target.type === 'checkbox') {
+    if (currentPage > pagesCounter) {
+      currentPage = pagesCounter;
+    }
     const idToCheck = Number(event.target.parentElement.previousSibling.parentNode.dataset.id);
     toDoList.forEach((todo) => {
       if (todo.id === idToCheck) {
