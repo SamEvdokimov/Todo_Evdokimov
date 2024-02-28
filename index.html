@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="./style.css" />
   <title>TodoJs App</title>
 </head>
-
 <body>
   <h1>TodoJs App</h1>
   <div class="input-area">
-    <input id="input-todo-text" type="text" maxlength = "100" class="form-control" placeholder="For example: sleep">
-    <button id="send-button" class="btn btn-primary" type="button">Add</button>
+    <input 
+      id="input-todo-text" 
+      maxlength = "100" 
+      class="form-control" 
+      placeholder="For example: sleep"
+    >
+    <button 
+      id="send-button" 
+      class="btn btn-primary" 
+      type="button"
+    >Add
+    </button>
   </div>
   <br>
   <div>
@@ -21,7 +29,12 @@
   </div>
   <ul id="list-for-render"></ul>
   <div class="group-buttons">
-    <button id="all-tasks" type="submit" class="active">All (0) </button>
+    <button 
+      id="all-tasks" 
+      type="submit" 
+      class="active"
+    >All (0) 
+    </button>
     <button id="all-active-tasks" type="submit">Active (0)</button>
     <button id="all-completed-tasks" type="submit">Completed (0)</button>
   </div>
