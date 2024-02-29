@@ -7,6 +7,7 @@ body {
 }
 
 #todo-list-item {
+  position: relative;
   width: 250px;
   display: flex;
   justify-content: space-between;
@@ -14,8 +15,17 @@ body {
   background: rgb(200, 233, 255);
   border-radius: 20px;
   margin: 10px 0;
+  padding-right: 20px;
+  padding-left: 10px; 
 }
 
+#todo-list-item button {
+  position: absolute;
+  right: 0;
+  transform: translateX(calc(100% - 25px));
+  border-top-right-radius: 20px; 
+  border-bottom-right-radius: 20px; 
+}
 #todo-text {
   display: flex;
   justify-content: start;
@@ -23,7 +33,7 @@ body {
 }
 
 #todo-text span {
-  width: 100px;
+  width: 200px;
   overflow-wrap: break-word;
 }
 
@@ -50,6 +60,9 @@ body {
 
 .active {
   background-color: lightblue;
+}
+#list-for-render{
+  padding-inline-start: 0px;
 }
 
 .group-buttons {

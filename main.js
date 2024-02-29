@@ -81,7 +81,7 @@
       <li id="todo-list-item" data-id=${todo.id}>
         <div id="todo-text">
         <input type="checkbox"${todo.isChecked ? 'checked' : ''}/>
-        <input class="edit-input" hidden value="${todo.text}"/>
+        <input class="edit-input" maxlength = "100" hidden value="${todo.text}"/>
         <span>${todo.text}</span>
         </div>
         <button>X</button> 
@@ -115,12 +115,27 @@
   };
 
   const validation = (inputValue, previousText) => {
-    inputValue = inputValue.trim().replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g, ' ').replace(/[^\w\s\u0400-\u04FF]/gi, '');
+    inputValue = inputValue.trim().replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g, ' ');
+
+    const escapedChars = {
+      '<': '&lt;',
+      '>': '&gt;',
+      '/': '&#x2F;',
+      '№': '&#8470;',
+      '%': '&#37;',
+      ';': '&#59;',
+      ':': '&#58;',
+      '?': '&#63;',
+      '*': '&#42;',
+    };
+    inputValue = inputValue.replace(/[<>/№%;:?*]/g, (match) => escapedChars[match]);
+
     if (inputValue !== '') {
       return inputValue;
     }
     return previousText;
   };
+
   const addNewTodo = () => {
     const textTOdo = inputNewTodo.value;
     const sanitizedTodoText = validation(textTOdo, '');
